@@ -24,9 +24,8 @@ namespace User.Domain.SeedWork {
 
         public void AddIntegrationEvent(IEvent @event)
         {
-            SetVersion(Version + 1);
             integrationEvents = integrationEvents ?? new List<UncommitedEvent>();
-            integrationEvents.Add(new UncommitedEvent(@event, Version));
+            integrationEvents.Add(new UncommitedEvent(@event, Version + 1));
         }
 
         public IList<UncommitedEvent> GetUncommitedIntegrationEvents()

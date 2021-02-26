@@ -28,12 +28,12 @@ namespace User.Application.Abstractions.Command
             var service = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>)) as ICommandHandler<TCommand>;
             await service.ExecuteAsync(command);
 
-
             foreach (var entry in _context.ChangeTracker.Entries().Where(entry => (entry.State == EntityState.Added ||
                 entry.State == EntityState.Modified) && entry.Entity is Entity))
             {
                 Entity entity = entry.Entity as Entity;
                 entity.UpdatedTime = DateTime.UtcNow;
+                entity.Version = entity.Version + 1;
 
                 if(entry.State == EntityState.Added)
                 {
@@ -48,6 +48,7 @@ namespace User.Application.Abstractions.Command
                     }
                 }
             }
+
             await _context.CommitTransactionAsync();
         }
     }
