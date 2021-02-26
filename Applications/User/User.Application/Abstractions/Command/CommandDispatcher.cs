@@ -32,8 +32,8 @@ namespace User.Application.Abstractions.Command
                 entry.State == EntityState.Modified) && entry.Entity is Entity))
             {
                 Entity entity = entry.Entity as Entity;
-                entity.UpdatedTime = DateTime.UtcNow;
                 entity.Version = entity.Version + 1;
+                entity.UpdatedTime = DateTime.UtcNow;
 
                 if(entry.State == EntityState.Added)
                 {
