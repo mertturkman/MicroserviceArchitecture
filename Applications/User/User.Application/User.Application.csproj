@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+    <PackageReference Include="AutoMapper.Attributes" Version="6.0.1" />
+    <PackageReference Include="FluentValidation" Version="8.6.3" />
+    <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+    <ProjectReference Include="../User.Domain/User.Domain.csproj" />
+    <ProjectReference Include="../../../CrossCutting/EventContext/EventContext.csproj" />
+    <ProjectReference Include="..\User.Infrastructure\User.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

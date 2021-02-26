@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MailNotification.DEV": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
