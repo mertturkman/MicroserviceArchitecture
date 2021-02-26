@@ -30,7 +30,6 @@
     <ProjectReference Include="../User.Application/User.Application.csproj" />
     <ProjectReference Include="../User.Infrastructure/User.Infrastructure.csproj" />
     <ProjectReference Include="../../../CrossCutting/Extensions/Extensions.csproj" />
-    <ProjectReference Include="../../../CrossCutting/EventContext/EventContext.csproj" />
     <ProjectReference Include="../../../CrossCutting/EventBus/EventBus.csproj" />
     <ProjectReference Include="../../../CrossCutting/Events/Events.csproj" />
     <ProjectReference Include="..\..\..\CrossCutting\Authentication\Authentication.csproj" />

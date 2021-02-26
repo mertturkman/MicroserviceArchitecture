@@ -1,10 +1,6 @@
-using System;
-using System.Threading;
 using System.Threading.Tasks;
 using User.Domain.AggregatesModel.UserAggregate;
 using User.Domain.AggregatesModel.RoleAggregate;
-using MediatR;
-using Crosscutting.EventContext;
 using User.Application.Utility;
 using User.Application.Abstractions.Command;
 

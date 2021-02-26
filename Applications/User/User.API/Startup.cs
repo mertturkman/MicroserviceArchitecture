@@ -10,7 +10,6 @@ using CrossCutting.Extensions;
 using User.Domain.SeedWork;
 using Microsoft.Extensions.Options;
 using System;
-using Crosscutting.EventContext;
 using MassTransit;
 using RabbitMQ.Client;
 using CrossCutting.EventBus.Abstractions;
@@ -72,7 +71,7 @@ namespace User.API
             });
 
             services.Configure<IntegrationBusSenderSettings>(Configuration.GetSection("IntegrationBusSenderSettings"));
-     
+
             services.AddSingleton(serviceProvider =>
             {
                 var settings = serviceProvider.GetService<IOptions<IntegrationBusSenderSettings>>().Value;
@@ -103,9 +102,8 @@ namespace User.API
                     });
 
                     cfg.Publish<CrossCutting.Events.User.Register>(x => x.ExchangeType = ExchangeType.Topic);
-                });            
-            }).AddScoped<IIntegrationEventBus, IntegrationEventBus>()
-              .AddScoped<IEventContext, EventContext>();
+                });
+            }).AddScoped<IIntegrationEventBus, IntegrationEventBus>();
 
             services.AddScoped<ICommandDispatcher, CommandDispatcher>()
                 .AddScoped<IQueryDispatcher, QueryDispatcher>();

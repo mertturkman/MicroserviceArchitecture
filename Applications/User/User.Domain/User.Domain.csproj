@@ -9,7 +9,6 @@
     <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="AutoMapper.Attributes" Version="6.0.1" />
     <ProjectReference Include="../../../CrossCutting/Events/Events.csproj" />
-    <ProjectReference Include="../../../CrossCutting/EventContext/EventContext.csproj" />
   </ItemGroup>
 
 </Project>

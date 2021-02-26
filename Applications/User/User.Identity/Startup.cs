@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using User.Identity.Utility;
 using User.Infrastructure;
-using Crosscutting.EventContext;
 
 namespace User.Identity
 {
@@ -31,8 +30,6 @@ namespace User.Identity
             services.AddMvcCore()
                 .AddAuthorization()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
-
-            services.AddScoped<IEventContext>(provider => null);
             
             IIdentityServerBuilder builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
