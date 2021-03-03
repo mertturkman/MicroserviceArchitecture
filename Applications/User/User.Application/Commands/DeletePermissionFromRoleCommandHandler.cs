@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using User.Application.Abstractions.Command;
 using User.Domain.AggregatesModel.RoleAggregate;
+using User.Domain.Exceptions;
 
 namespace User.Application.Commands
 {
@@ -17,11 +18,17 @@ namespace User.Application.Commands
 
         public async Task ExecuteAsync(DeletePermissionFromRoleCommand command)
         {
-
             RolePermission rolePermission = await _roleRepository.FindPermissionByIdAsync(command.RolePermissionId);
-            rolePermission.Delete();
 
-            _roleRepository.UpdatePermission(rolePermission);
+            if(rolePermission != null)
+            {
+                rolePermission.Delete();
+                _roleRepository.UpdatePermission(rolePermission);
+            }
+            else
+            {
+                throw new NotFoundException();
+            }
         }
     }
 }

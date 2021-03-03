@@ -1,11 +1,7 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using User.Domain.AggregatesModel.PermissionAggregate;
 using User.Application.Abstractions.Command;
+using User.Domain.Exceptions;
 
 namespace User.Application.Commands
 {
@@ -20,8 +16,17 @@ namespace User.Application.Commands
 
         public async Task ExecuteAsync(CreatePermissionCommand command)
         {
-            Permission permission = new Permission(command.Name, command.Description, command.Code);
-            _permissionRepository.Create(permission);
+            bool isExist = await _permissionRepository.IsExistByNameAsync(command.Name);
+            
+            if (!isExist) 
+            {
+                Permission permission = new Permission(command.Name, command.Description, command.Code);
+                _permissionRepository.Create(permission);
+            }
+            else
+            {
+                throw new ConflictException();
+            }
         }
     }
 }

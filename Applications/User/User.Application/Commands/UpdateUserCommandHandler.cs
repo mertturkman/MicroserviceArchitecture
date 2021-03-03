@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using User.Domain.AggregatesModel.UserAggregate;
 using MediatR;
 using User.Application.Abstractions.Command;
+using User.Domain.Exceptions;
 
 namespace User.Application.Commands
 {
@@ -19,10 +20,17 @@ namespace User.Application.Commands
         public async Task ExecuteAsync(UpdateUserCommand command)
         {
             Domain.AggregatesModel.UserAggregate.User user = await _userRepository.FindByIdAsync(command.Id);
-            user.SetInformation(command.Name, command.Surname, command.Mail, command.Street, command.City, command.State,
-                command.Country, command.ZipCode);
 
-            _userRepository.Update(user);
+            if(user != null)
+            {
+                user.SetInformation(command.Name, command.Surname, command.Mail, command.Street, command.City, command.State,
+                    command.Country, command.ZipCode);
+                _userRepository.Update(user);
+            }
+            else
+            {
+                throw new NotFoundException();
+            }
         }
     }
 }

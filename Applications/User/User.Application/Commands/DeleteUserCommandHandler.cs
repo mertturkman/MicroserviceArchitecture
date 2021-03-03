@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using User.Application.Abstractions.Command;
 using User.Domain.AggregatesModel.UserAggregate;
+using User.Domain.Exceptions;
 
 namespace User.Application.Commands
 {
@@ -20,9 +21,16 @@ namespace User.Application.Commands
         public async Task ExecuteAsync(DeleteUserCommand command)
         {
             Domain.AggregatesModel.UserAggregate.User user = await _userRepository.FindByIdAsync(command.UserId);
-            user.Delete();
 
-            _userRepository.Update(user);
+            if(user != null)
+            {
+                user.Delete();
+                _userRepository.Update(user);
+            } 
+            else
+            {
+                throw new NotFoundException();
+            }
         }
     }
 }

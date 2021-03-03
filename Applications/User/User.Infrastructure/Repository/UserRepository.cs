@@ -28,7 +28,7 @@ namespace User.Infrastructure.Repository {
         public async Task<Domain.AggregatesModel.UserAggregate.User> FindByIdAsync(Guid id)
         {
             return await _context.Users
-                .SingleAsync(user => user.Id == id)
+                .SingleOrDefaultAsync(user => user.Id == id)
                 .ConfigureAwait(false);
         }
 
@@ -36,7 +36,7 @@ namespace User.Infrastructure.Repository {
         {
             return await _context.UserRoles
                 .Include(userRole => userRole.Role)
-                .SingleAsync(userRole => userRole.Id == id)
+                .SingleOrDefaultAsync(userRole => userRole.Id == id)
                 .ConfigureAwait(false);
         }
 
@@ -45,6 +45,27 @@ namespace User.Infrastructure.Repository {
                 .Include(userRole => userRole.Role)
                 .Where(userRole => userRole.Id == id)
                 .ToArrayAsync()
+                .ConfigureAwait(false);
+        }
+
+        public async Task<bool> IsExistByIdAsync(Guid id)
+        {
+            return await _context.Users
+                .AnyAsync(user => user.Id == id)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<bool> IsExistByUsernameAndMailAsync(string username, string mail)
+        {
+            return await _context.Users
+                .AnyAsync(user => user.Username == username && user.Mail == mail)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<bool> IsExistRoleByIdAsync(Guid userId, Guid roleId)
+        {
+            return await _context.UserRoles
+                .AnyAsync(userRole => userRole.UserId == userId && userRole.RoleId == roleId)
                 .ConfigureAwait(false);
         }
 

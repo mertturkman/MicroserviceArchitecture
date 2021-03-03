@@ -7,6 +7,9 @@ namespace User.Domain.AggregatesModel.RoleAggregate {
         Task<Role[]> GetAllAsync();
         Task<Role> FindByIdAsync(Guid id);
         Task<Role> FindByNameAsync(string name);
+        Task<bool> IsExistByIdAsync(Guid id);
+        Task<bool> IsExistByNameAsync(string name);
+        Task<bool> IsExistPermissionByIdAsync(Guid roleId, Guid permissionId);
         void Create(Role role);
         void Update(Role role);
         Task<RolePermission> FindPermissionByIdAsync(Guid id);

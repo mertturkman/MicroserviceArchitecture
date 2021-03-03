@@ -13,9 +13,8 @@ namespace User.Infrastructure.EntityConfigurations
         {
             builder.ToTable("Permission", UserContext.DEFAULT_SCHEMA);
             builder.HasKey(permission => permission.Id);
-            builder.HasIndex(permission => permission.Name)
-                .IsUnique();
-            
+            builder.HasIndex(permission => permission.Name);
+                
             builder.Property(permission => permission.Id)
                 .HasDefaultValueSql("uuid_generate_v4()");
             builder.Property(permission => permission.Name)

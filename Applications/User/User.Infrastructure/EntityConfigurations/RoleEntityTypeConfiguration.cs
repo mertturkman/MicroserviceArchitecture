@@ -11,8 +11,7 @@ namespace User.Infrastructure.EntityConfigurations
         {
             builder.ToTable("Role", UserContext.DEFAULT_SCHEMA);
             builder.HasKey(role => role.Id);
-            builder.HasIndex(role => role.Name)
-                .IsUnique();
+            builder.HasIndex(role => role.Name);
 
             builder.Property(role => role.Id)
                 .HasDefaultValueSql("uuid_generate_v4()");

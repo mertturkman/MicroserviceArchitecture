@@ -8,12 +8,9 @@ namespace User.Infrastructure.EntityConfigurations {
             builder.ToTable ("User", UserContext.DEFAULT_SCHEMA);
             builder.HasKey (user => user.Id);
 
-            builder.HasIndex(user => new { user.Username, user.Password })
-                .IsUnique();
-            builder.HasIndex(user => user.Username)
-                .IsUnique();
-            builder.HasIndex(user => user.Mail)
-                .IsUnique();
+            builder.HasIndex(user => new { user.Username, user.Password });
+            builder.HasIndex(user => user.Username);
+            builder.HasIndex(user => user.Mail);
 
             builder.Property(user => user.Id)
                 .HasDefaultValueSql("uuid_generate_v4()");

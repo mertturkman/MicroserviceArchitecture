@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using User.Application.Abstractions.Command;
 using User.Domain.AggregatesModel.PermissionAggregate;
+using User.Domain.Exceptions;
 
 namespace User.Application.Commands
 {
@@ -21,9 +22,16 @@ namespace User.Application.Commands
         public async Task ExecuteAsync(UpdatePermissionCommand command)
         {
             Permission permission = await _permissionRepository.FindByIdAsync(command.Id);
-            permission.SetDefinition(command.Name, command.Description, command.Code);
 
-            _permissionRepository.Update(permission);
+            if(permission != null)
+            {
+                permission.SetDefinition(command.Name, command.Description, command.Code);
+                _permissionRepository.Update(permission);
+            }
+            else
+            {
+                throw new NotFoundException();
+            }
         }
     }
 }

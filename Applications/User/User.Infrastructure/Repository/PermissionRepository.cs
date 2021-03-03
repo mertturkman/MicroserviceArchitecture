@@ -32,7 +32,28 @@ namespace User.Infrastructure.Repository
         public async Task<Permission> FindByIdAsync(Guid id)
         {
             return await _context.Permissions
-                .SingleAsync(permission => permission.Id == id)
+                .SingleOrDefaultAsync(permission => permission.Id == id)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<Permission> FindByNameAsync(string name)
+        {
+            return await _context.Permissions
+                .SingleOrDefaultAsync(permission => permission.Name == name)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<bool> IsExistByIdAsync(Guid id)
+        {
+            return await _context.Permissions
+                .AnyAsync(permission => permission.Id == id)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<bool> IsExistByNameAsync(string name)
+        {
+            return await _context.Permissions
+                .AnyAsync(permission => permission.Name == name)
                 .ConfigureAwait(false);
         }
 
@@ -45,5 +66,6 @@ namespace User.Infrastructure.Repository
         {
             _context.Entry(permission).State = EntityState.Modified;
         }
+
     }
 }

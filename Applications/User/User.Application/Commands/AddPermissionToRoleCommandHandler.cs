@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using User.Application.Abstractions.Command;
-using User.Domain.AggregatesModel.PermissionAggregate;
 using User.Domain.AggregatesModel.RoleAggregate;
+using User.Domain.Exceptions;
 
 namespace User.Application.Commands
 {
@@ -19,8 +16,20 @@ namespace User.Application.Commands
 
         public async Task ExecuteAsync(AddPermissionToRoleCommand command)
         {
-            RolePermission rolePermission = new RolePermission(command.PermissionId, command.RoleId);
-            _roleRepository.AddPermission(rolePermission);
+
+            bool isExist = await _roleRepository.IsExistPermissionByIdAsync(command.RoleId, command.PermissionId);
+
+            if(!isExist)
+            {
+                RolePermission rolePermission = new RolePermission(command.PermissionId, command.RoleId);
+                _roleRepository.AddPermission(rolePermission);
+            }
+            else
+            {
+                throw new ConflictException();
+            }
+
+
         }
     }
 }

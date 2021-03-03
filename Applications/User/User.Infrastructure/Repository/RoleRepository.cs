@@ -32,14 +32,14 @@ namespace User.Infrastructure.Repository
         public async Task<Role> FindByIdAsync(Guid id) 
         {
             return await _context.Roles
-                .SingleAsync(role => role.Id == id)
+                .SingleOrDefaultAsync(role => role.Id == id)
                 .ConfigureAwait(false);
         }
 
         public async Task<Role> FindByNameAsync(string name) 
         {   
             return await _context.Roles
-                .SingleAsync(role => role.Name == name)
+                .SingleOrDefaultAsync(role => role.Name == name)
                 .ConfigureAwait(false);
         }
 
@@ -47,7 +47,28 @@ namespace User.Infrastructure.Repository
         {
             return await _context.RolePermissions
                 .Include(rolePermission => rolePermission.Permission)
-                .SingleAsync(rolePermission => rolePermission.Id == id)
+                .SingleOrDefaultAsync(rolePermission => rolePermission.Id == id)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<bool> IsExistByIdAsync(Guid id)
+        {
+            return await _context.Roles
+                .AnyAsync(permission => permission.Id == id)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<bool> IsExistByNameAsync(string name)
+        {
+            return await _context.Roles
+                .AnyAsync(permission => permission.Name == name)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<bool> IsExistPermissionByIdAsync(Guid roleId, Guid permissionId)
+        {
+            return await _context.RolePermissions
+                .AnyAsync(rolePermission => rolePermission.PermissionId == permissionId && rolePermission.RoleId == roleId)
                 .ConfigureAwait(false);
         }
 
@@ -69,11 +90,6 @@ namespace User.Infrastructure.Repository
         public void UpdatePermission(RolePermission rolePermission)
         {
             _context.Entry(rolePermission).State = EntityState.Modified;
-        }
-
-        Task<RolePermission> IRoleRepository.FindPermissionByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<RolePermission[]> FindPermissionsByIdAsync(Guid id)

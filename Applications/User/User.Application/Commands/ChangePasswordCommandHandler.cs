@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using User.Application.Abstractions.Command;
 using User.Application.Utility;
 using User.Domain.AggregatesModel.UserAggregate;
+using User.Domain.Exceptions;
 
 namespace User.Application.Commands
 {
@@ -21,7 +22,15 @@ namespace User.Application.Commands
         public async Task ExecuteAsync(ChangePasswordCommand command)
         {
             Domain.AggregatesModel.UserAggregate.User user = await _userRepository.FindByIdAsync(command.UserId);
-            user.ChangePassword(PasswordHasher.CryptoSHA256(command.NewPassword));
+
+            if(user != null)
+            {
+                user.ChangePassword(PasswordHasher.CryptoSHA256(command.NewPassword));
+            }
+            else
+            {
+                throw new NotFoundException();
+            }
         }
     }
 }

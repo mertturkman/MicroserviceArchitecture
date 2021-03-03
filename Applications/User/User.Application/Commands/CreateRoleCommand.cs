@@ -5,15 +5,7 @@ namespace User.Application.Commands
 {
     public class CreateRoleCommand : ICommand
     {
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-
-        [JsonConstructor]
-        public CreateRoleCommand(string name, string description)
-        {
-            Name = name;
-            Description = description;
-        }   
-
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

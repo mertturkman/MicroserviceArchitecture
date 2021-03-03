@@ -1,8 +1,7 @@
-using System.Threading;
 using System.Threading.Tasks;
 using User.Domain.AggregatesModel.RoleAggregate;
-using MediatR;
 using User.Application.Abstractions.Command;
+using User.Domain.Exceptions;
 
 namespace User.Application.Commands
 {
@@ -17,8 +16,17 @@ namespace User.Application.Commands
 
         public async Task ExecuteAsync(CreateRoleCommand command)
         {
-            Role role = new Role(command.Name, command.Description);
-            _roleRepository.Create(role);
+            bool isExist = await _roleRepository.IsExistByNameAsync(command.Name);
+
+            if(!isExist)
+            {
+                Role role = new Role(command.Name, command.Description);
+                _roleRepository.Create(role);
+            }
+            else
+            {
+                throw new ConflictException();
+            }
         }
     }
 }
