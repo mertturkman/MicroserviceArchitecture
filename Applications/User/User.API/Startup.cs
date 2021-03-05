@@ -22,6 +22,7 @@ using User.Application.Abstractions.Query;
 using User.API.Filters;
 using User.Application.Utility;
 using FluentValidation.AspNetCore;
+using Middleware;
 
 namespace User.API
 {
@@ -128,6 +129,7 @@ namespace User.API
                 app.UseHsts();               
             }
 
+            app.UseMiddleware(typeof(ErrorMiddleware));
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

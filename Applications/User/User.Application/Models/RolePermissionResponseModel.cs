@@ -9,7 +9,6 @@ namespace User.Application.Models
     {
         public RolePermissionModel[] RolePermissions { get; set;}
 
-
         public RolePermissionsViewModel MapToResponse(RolePermission[] rolePermissionEntities)
         {
             List<RolePermissionModel> rolePermissionModels = new List<RolePermissionModel>();

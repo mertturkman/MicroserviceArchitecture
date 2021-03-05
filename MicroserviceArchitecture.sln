@@ -63,6 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication", "CrossCutting\Authentication\Authentication.csproj", "{806DA1CE-33E1-40DB-8A4E-9F363EB054F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Middleware", "CrossCutting\Middleware\Middleware.csproj", "{7D30805E-6285-4108-8A97-06B6F6BB579E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{806DA1CE-33E1-40DB-8A4E-9F363EB054F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{806DA1CE-33E1-40DB-8A4E-9F363EB054F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{806DA1CE-33E1-40DB-8A4E-9F363EB054F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D30805E-6285-4108-8A97-06B6F6BB579E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D30805E-6285-4108-8A97-06B6F6BB579E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D30805E-6285-4108-8A97-06B6F6BB579E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D30805E-6285-4108-8A97-06B6F6BB579E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,6 +192,7 @@ Global
 		{93802BEE-5775-48A2-9DD3-1B8726145A7E} = {3C4E7BD9-614E-46C5-804A-95CD293D69E0}
 		{7EA44E0C-CCDB-40BB-8C15-ADF728A32EAE} = {3C4E7BD9-614E-46C5-804A-95CD293D69E0}
 		{806DA1CE-33E1-40DB-8A4E-9F363EB054F2} = {7EA44E0C-CCDB-40BB-8C15-ADF728A32EAE}
+		{7D30805E-6285-4108-8A97-06B6F6BB579E} = {3C4E7BD9-614E-46C5-804A-95CD293D69E0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A494405-20AB-4E06-838D-5C736219AEAB}
