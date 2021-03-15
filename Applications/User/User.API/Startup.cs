@@ -108,10 +108,6 @@ namespace User.API
 
             services.AddScoped<ICommandDispatcher, CommandDispatcher>()
                 .AddScoped<IQueryDispatcher, QueryDispatcher>();
-
-            AutoMapper.Mapper.Initialize(config => {
-                typeof(Program).Assembly.MapTypes(config);  
-            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

@@ -18,7 +18,9 @@ namespace User.Application.Queries {
         public async Task<UserResponseModel> QueryAsync(UserFindByIdQuery query)
         {
             Domain.AggregatesModel.UserAggregate.User user = await _userRepository.FindByIdAsync(query.Id);
-            return AutoMapper.Mapper.Map<UserResponseModel>(user);
+            UserResponseModel userResponseModel = new UserResponseModel();
+
+            return userResponseModel.MapToResponse(user);
         }
     }
 }

@@ -16,7 +16,9 @@ namespace User.Application.Queries
         public async Task<PermissionResponseModel> QueryAsync(PermissionFindByIdQuery query)
         {
             Permission permission = await _permissionRepository.FindByIdAsync(query.Id);
-            return AutoMapper.Mapper.Map<PermissionResponseModel>(permission);
+            PermissionResponseModel permissionResponseModel = new PermissionResponseModel();
+
+            return permissionResponseModel.MapToResponse(permission);
         }
     }
 }

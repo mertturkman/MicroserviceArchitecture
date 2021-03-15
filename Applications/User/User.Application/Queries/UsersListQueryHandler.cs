@@ -19,7 +19,9 @@ namespace User.Application.Queries {
         public async Task<UserResponseModel[]> QueryAsync(UsersListQuery query)
         {
             Domain.AggregatesModel.UserAggregate.User[] userList = await _userRepository.GetAllAsync();
-            return AutoMapper.Mapper.Map<UserResponseModel[]>(userList);
+            UserResponseModel userResponseModel = new UserResponseModel();
+
+            return userResponseModel.MapToResponse(userList);
         }
     }
 }

@@ -22,7 +22,9 @@ namespace User.Application.Queries
         public async Task<PermissionResponseModel[]> QueryAsync(PermissionsListQuery query)
         {
             Permission[] permissionList = await _permissionRepository.GetAllAsync();
-            return AutoMapper.Mapper.Map<PermissionResponseModel[]>(permissionList);
+            PermissionResponseModel permissionResponseModel = new PermissionResponseModel();
+
+            return permissionResponseModel.MapToResponse(permissionList);
         }
     }
 }

@@ -19,7 +19,9 @@ namespace User.Application.Queries
         public async Task<RoleResponseModel[]> QueryAsync(RolesListQuery query)
         {
             Role[] roleList = await _roleRepository.GetAllAsync();
-            return AutoMapper.Mapper.Map<RoleResponseModel[]>(roleList);
+            RoleResponseModel roleResponseModel = new RoleResponseModel();
+
+            return roleResponseModel.MapToResponse(roleList);
         }
     }
 }
