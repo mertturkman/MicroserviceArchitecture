@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace User.Infrastructure.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,6 +59,9 @@ namespace User.Infrastructure.Migrations
                     Password = table.Column<string>(type: "text", nullable: false),
                     Mail = table.Column<string>(type: "text", nullable: false),
                     PasswordUpdateDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastLoginDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    FailedLoginAttempts = table.Column<int>(type: "integer", nullable: false),
+                    LastFailedLoginAttemptDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     Address_Street = table.Column<string>(type: "text", nullable: true),
                     Address_City = table.Column<string>(type: "text", nullable: true),
                     Address_State = table.Column<string>(type: "text", nullable: true),
@@ -138,19 +141,43 @@ namespace User.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserToken",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Token = table.Column<string>(type: "text", nullable: false),
+                    IsUsing = table.Column<bool>(type: "boolean", nullable: false),
+                    Version = table.Column<int>(type: "integer", nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserToken", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserToken_User_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "public",
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Permission_Name",
                 schema: "public",
                 table: "Permission",
-                column: "Name",
-                unique: true);
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Role_Name",
                 schema: "public",
                 table: "Role",
-                column: "Name",
-                unique: true);
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RolePermission_PermissionId",
@@ -168,22 +195,19 @@ namespace User.Infrastructure.Migrations
                 name: "IX_User_Mail",
                 schema: "public",
                 table: "User",
-                column: "Mail",
-                unique: true);
+                column: "Mail");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Username",
                 schema: "public",
                 table: "User",
-                column: "Username",
-                unique: true);
+                column: "Username");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Username_Password",
                 schema: "public",
                 table: "User",
-                columns: new[] { "Username", "Password" },
-                unique: true);
+                columns: new[] { "Username", "Password" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRole_RoleId",
@@ -196,6 +220,12 @@ namespace User.Infrastructure.Migrations
                 schema: "public",
                 table: "UserRole",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserToken_UserId",
+                schema: "public",
+                table: "UserToken",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -206,6 +236,10 @@ namespace User.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserRole",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "UserToken",
                 schema: "public");
 
             migrationBuilder.DropTable(

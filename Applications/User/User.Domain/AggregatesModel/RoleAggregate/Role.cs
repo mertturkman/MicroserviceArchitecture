@@ -24,7 +24,6 @@ namespace User.Domain.AggregatesModel.RoleAggregate
 
             Name = name;
             Description = description;
-            CreatedTime = DateTime.UtcNow;
         }
 
         public void SetDefinition(string name, string description)

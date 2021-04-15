@@ -13,7 +13,7 @@ namespace MailNotification.Infrastructure.EntityConfigurations
         {
             builder.ToTable("SentMail", MailNotificationContext.DEFAULT_SCHEMA);
             builder.HasKey(sentMail => sentMail.Id);
-            builder.Property(sentMail => sentMail.Status).IsRequired();
+            builder.Property(sentMail => sentMail.Id).HasDefaultValueSql("uuid_generate_v4()");
             builder.Property(sentMail => sentMail.To).IsRequired();
             builder.Property(sentMail => sentMail.From).IsRequired();
             builder.Property(sentMail => sentMail.Subject).IsRequired();

@@ -18,6 +18,7 @@ namespace User.Infrastructure {
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
 
         private IDbContextTransaction currentTransaction { get; set; }
 
@@ -32,8 +33,7 @@ namespace User.Infrastructure {
             modelBuilder.ApplyConfiguration(new UserRoleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RolePermissionTypeConfiguration());
-
-            //Seed(modelBuilder);
+            modelBuilder.ApplyConfiguration(new UserTokenEntityTypeConfiguration());
         }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -44,7 +44,7 @@ namespace User.Infrastructure {
         
         public async Task BeginTransactionAsync () 
         {
-            currentTransaction = currentTransaction ?? await Database.BeginTransactionAsync(IsolationLevel.Serializable).ConfigureAwait(false);
+            currentTransaction = currentTransaction ?? await Database.BeginTransactionAsync(IsolationLevel.ReadCommitted).ConfigureAwait(false);
         }
 
         public async Task CommitTransactionAsync () 

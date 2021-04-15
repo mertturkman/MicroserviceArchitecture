@@ -103,6 +103,13 @@ namespace User.API
                     });
 
                     cfg.Publish<CrossCutting.Events.User.Register>(x => x.ExchangeType = ExchangeType.Topic);
+
+                    cfg.Send<CrossCutting.Events.User.ForgetPassword>(x =>
+                    {
+                        x.UseRoutingKeyFormatter(c => settings.ForgetPasswordRoutingKey);
+                    });
+
+                    cfg.Publish<CrossCutting.Events.User.ForgetPassword>(x => x.ExchangeType = ExchangeType.Topic);
                 });
             }).AddScoped<IIntegrationEventBus, IntegrationEventBus>();
 

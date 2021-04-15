@@ -10,8 +10,8 @@ using User.Infrastructure;
 namespace User.Infrastructure.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210222170146_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210403115502_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -53,8 +53,7 @@ namespace User.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("Name");
 
                     b.ToTable("Permission", "public");
                 });
@@ -87,8 +86,7 @@ namespace User.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("Name");
 
                     b.ToTable("Role", "public");
                 });
@@ -137,8 +135,17 @@ namespace User.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<int>("FailedLoginAttempts")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastFailedLoginAttemptDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("LastLoginDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Mail")
                         .IsRequired()
@@ -171,14 +178,11 @@ namespace User.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Mail")
-                        .IsUnique();
+                    b.HasIndex("Mail");
 
-                    b.HasIndex("Username")
-                        .IsUnique();
+                    b.HasIndex("Username");
 
-                    b.HasIndex("Username", "Password")
-                        .IsUnique();
+                    b.HasIndex("Username", "Password");
 
                     b.ToTable("User", "public");
                 });
@@ -215,6 +219,42 @@ namespace User.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRole", "public");
+                });
+
+            modelBuilder.Entity("User.Domain.AggregatesModel.UserAggregate.UserToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("uuid_generate_v4()");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsUsing")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserToken", "public");
                 });
 
             modelBuilder.Entity("User.Domain.AggregatesModel.RoleAggregate.RolePermission", b =>
@@ -289,6 +329,17 @@ namespace User.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("User.Domain.AggregatesModel.UserAggregate.UserToken", b =>
+                {
+                    b.HasOne("User.Domain.AggregatesModel.UserAggregate.User", "User")
+                        .WithMany("UserTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("User.Domain.AggregatesModel.PermissionAggregate.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
@@ -304,6 +355,8 @@ namespace User.Infrastructure.Migrations
             modelBuilder.Entity("User.Domain.AggregatesModel.UserAggregate.User", b =>
                 {
                     b.Navigation("UserRoles");
+
+                    b.Navigation("UserTokens");
                 });
 #pragma warning restore 612, 618
         }

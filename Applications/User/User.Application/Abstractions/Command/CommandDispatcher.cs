@@ -11,8 +11,8 @@ namespace User.Application.Abstractions.Command
     public class CommandDispatcher : ICommandDispatcher
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly UserContext _context;
         private readonly IIntegrationEventBus _eventBus;
+        private readonly UserContext _context;
 
         public CommandDispatcher(IServiceProvider serviceProvider, UserContext context, IIntegrationEventBus eventBus)
         {
@@ -44,7 +44,7 @@ namespace User.Application.Abstractions.Command
                 {
                     foreach (var uncommitedEvent in entity.GetUncommitedIntegrationEvents())
                     {
-                        await _eventBus.Publish(uncommitedEvent);
+                        await _eventBus.Publish(uncommitedEvent.Event);
                     }
                 }
             }

@@ -5,22 +5,24 @@ using Microsoft.EntityFrameworkCore;
 using User.Domain.AggregatesModel.UserAggregate;
 using User.Domain.SeedWork;
 
-namespace User.Infrastructure.Repository {
-    public class UserRepository : IUserRepository {
-        
+namespace User.Infrastructure.Repository
+{
+    public class UserRepository : IUserRepository
+    {
         private readonly UserContext _context;
-        public IUnitOfWork UnitOfWork {
-            get {
-                return _context;
-            }
+
+        public IUnitOfWork UnitOfWork
+        {
+            get { return _context; }
         }
 
-        public UserRepository(UserContext context) 
+        public UserRepository(UserContext context)
         {
             _context = context;
         }
 
-        public async Task<Domain.AggregatesModel.UserAggregate.User[]> GetAllAsync () {
+        public async Task<Domain.AggregatesModel.UserAggregate.User[]> GetAllAsync()
+        {
             return await _context.Users
                 .ToArrayAsync().ConfigureAwait(false);
         }
@@ -32,6 +34,13 @@ namespace User.Infrastructure.Repository {
                 .ConfigureAwait(false);
         }
 
+        public async Task<Domain.AggregatesModel.UserAggregate.User> FindByMailAsync(string mail)
+        {
+            return await _context.Users
+                .SingleOrDefaultAsync(user => user.Mail == mail)
+                .ConfigureAwait(false);
+        }
+
         public async Task<UserRole> FindRoleByIdAsync(Guid id)
         {
             return await _context.UserRoles
@@ -40,7 +49,8 @@ namespace User.Infrastructure.Repository {
                 .ConfigureAwait(false);
         }
 
-        public async Task<UserRole[]> FindRolesByIdAsync (Guid id) {
+        public async Task<UserRole[]> FindRolesByIdAsync(Guid id)
+        {
             return await _context.UserRoles
                 .Include(userRole => userRole.Role)
                 .Where(userRole => userRole.Id == id)
@@ -69,17 +79,38 @@ namespace User.Infrastructure.Repository {
                 .ConfigureAwait(false);
         }
 
-        public void Create(Domain.AggregatesModel.UserAggregate.User user) 
+        public async Task<bool> IsTokenValidationAsync(Guid userId, string token, int tokenTimeoutMinute)
         {
-            _context.Entry(user).State = EntityState.Added;
-            _context.Entry(user.Address).State = EntityState.Added;   
-                
+            UserToken userToken = await _context.UserTokens
+                .FirstOrDefaultAsync(userToken => userToken.UserId == userId
+                                       && userToken.Token == token
+                                       && !userToken.IsUsing)
+                .ConfigureAwait(false);
+            
+            return userToken != null && DateTime.UtcNow < userToken.CreatedTime.Add(TimeSpan.FromMinutes(tokenTimeoutMinute));
         }
 
-        public void Update(Domain.AggregatesModel.UserAggregate.User user) 
+        public async Task<UserToken> FindUserTokenByUserIdAndTokenAsync(Guid userId, string token)
+        {
+            return await _context.UserTokens
+                .FirstOrDefaultAsync(userToken => userToken.UserId == userId
+                                       && userToken.Token == token
+                                       && !userToken.IsUsing)
+                .ConfigureAwait(false);
+        }
+
+        public void Create(Domain.AggregatesModel.UserAggregate.User user)
+        {
+            _context.Entry(user).State = EntityState.Added;
+            _context.Entry(user.Address).State = EntityState.Added;
+        }
+
+        public void Update(Domain.AggregatesModel.UserAggregate.User user)
         {
             _context.Entry(user).State = EntityState.Modified;
-            _context.Entry(user.Address).State = EntityState.Modified;
+            
+            if (user.Address != null)
+                _context.Entry(user.Address).State = EntityState.Modified;
         }
 
         public void AddRole(UserRole userRole)
@@ -90,6 +121,16 @@ namespace User.Infrastructure.Repository {
         public void UpdateRole(UserRole userRole)
         {
             _context.Entry(userRole).State = EntityState.Modified;
+        }
+
+        public void CreateToken(UserToken userToken)
+        {
+            _context.Entry(userToken).State = EntityState.Added;
+        }
+
+        public void UpdateToken(UserToken userToken)
+        {
+            _context.Entry(userToken).State = EntityState.Modified;
         }
     }
 }

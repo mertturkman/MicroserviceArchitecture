@@ -14,13 +14,11 @@ namespace User.Domain.AggregatesModel.UserAggregate {
         public UserRole (Guid userId, Guid roleId) {
             UserId = userId;
             RoleId = roleId;
-            CreatedTime = DateTime.UtcNow;
         }
 
         public UserRole (User user, Role role) {
             User = user;
             Role = role;
-            CreatedTime = DateTime.UtcNow;
         }
 
         public void Delete()

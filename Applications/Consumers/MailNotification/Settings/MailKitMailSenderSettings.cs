@@ -7,7 +7,7 @@ namespace MailNotification.Settings
     public class MailKitMailSenderSettings
     {
         public string Server { get; set; }
-        public string Port { get; set; }
+        public int Port { get; set; }
         public string From { get; set; }
         public string FromName { get; set; }
         public string Username { get; set; }

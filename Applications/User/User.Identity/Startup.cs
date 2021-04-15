@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using User.Domain.AggregatesModel.UserAggregate;
 using User.Identity.Utility;
 using User.Infrastructure;
+using User.Infrastructure.Repository;
 
 namespace User.Identity
 {
@@ -30,6 +32,8 @@ namespace User.Identity
             services.AddMvcCore()
                 .AddAuthorization()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
+
+            services.AddScoped<IUserRepository, UserRepository>();
             
             IIdentityServerBuilder builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())

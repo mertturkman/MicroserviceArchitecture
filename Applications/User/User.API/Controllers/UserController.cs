@@ -64,6 +64,7 @@ namespace User.API.Controllers
 
         [Route("Register")]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterCommand model) 
         {
             return await ExecuteCommandAsync(model).ConfigureAwait(false);
@@ -89,6 +90,31 @@ namespace User.API.Controllers
         [HttpPut]
         [PermissionRequirement(CustomClaimType.Permission_ChangePassword)]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand model)
+        {
+            return await ExecuteCommandAsync(model).ConfigureAwait(false);
+        }
+
+        [Route("ChangePasswordUsingToken")]
+        [HttpPut]
+        [AllowAnonymous]
+        public async Task<IActionResult> ChangePasswordUsingToken([FromBody] ChangePasswordUsingTokenCommand model)
+        {
+            return await ExecuteCommandAsync(model).ConfigureAwait(false);
+        }
+
+        [Route("TokenValidation")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> TokenValidation([FromQuery] TokenValidationQuery model)
+        {
+            return await ExecuteQueryAsync<TokenValidationQuery, object>(model)
+                .ConfigureAwait(false);
+        }
+        
+        [Route("ForgetPassword")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgetPassword([FromQuery] ForgetPasswordCommand model)
         {
             return await ExecuteCommandAsync(model).ConfigureAwait(false);
         }

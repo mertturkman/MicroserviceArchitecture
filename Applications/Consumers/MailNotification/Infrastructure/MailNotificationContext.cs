@@ -7,6 +7,8 @@ using System.Data;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MailNotification.Infrastructure.Configurations;
+using MailNotification.Infrastructure.EntityConfigurations;
 
 namespace MailNotification.Infrastructure
 {
@@ -26,6 +28,8 @@ namespace MailNotification.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new MailTemplateEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SentMailEntityTypeConfiguration());
         }
 
         public bool SaveEntities(CancellationToken cancellationToken = default(CancellationToken))

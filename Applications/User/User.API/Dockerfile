@@ -14,6 +14,7 @@ COPY ["CrossCutting/Authentication/Authentication.csproj", "CrossCutting/Authent
 COPY ["CrossCutting/Events/Events.csproj", "CrossCutting/Events/"]
 COPY ["Applications/User/User.Infrastructure/User.Infrastructure.csproj", "Applications/User/User.Infrastructure/"]
 COPY ["Applications/User/User.Domain/User.Domain.csproj", "Applications/User/User.Domain/"]
+COPY ["CrossCutting/Middleware/Middleware.csproj", "CrossCutting/Middleware/"]
 COPY ["Applications/User/User.Application/User.Application.csproj", "Applications/User/User.Application/"]
 RUN dotnet restore "Applications/User/User.API/User.API.csproj"
 COPY . .

@@ -7,6 +7,12 @@ using MailNotification.Consumers;
 using Microsoft.Extensions.Options;
 using MailNotification.Consumers.Settings;
 using CrossCutting.Extensions;
+using MailNotification.Infrastructure;
+using MailNotification.Infrastructure.Repositories;
+using MailNotification.Infrastructure.Service;
+using MailNotification.Settings;
+using Microsoft.EntityFrameworkCore;
+using IHost = Microsoft.Extensions.Hosting.IHost;
 
 namespace MailNotification
 {
@@ -14,20 +20,34 @@ namespace MailNotification
     {
         public static async Task Main(string[] args)
         {
-            var builder = Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>{               
-                    services.Configure<IntegrationBusReceiverSettings>(hostContext.Configuration.GetSection("IntegrationBusReceiverSettings"));
-                    BootstrapConsumers(services);
-                });
-
-            await builder.Build().RunAsync();
+            await CreateHostBuilder(args).Build().RunAsync();
         }
 
-        private static void BootstrapConsumers(IServiceCollection services)
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =>{               
+                    BootstrapConsumers(services, hostContext);
+                });
+
+        private static void BootstrapConsumers(IServiceCollection services, HostBuilderContext hostContext)
         {
+            services.Configure<IntegrationBusReceiverSettings>(hostContext.Configuration.GetSection("IntegrationBusReceiverSettings"));
+            services.Configure<MailKitMailSenderSettings>(hostContext.Configuration.GetSection("MailKitMailSenderSettings"));
+
+            services.AddEntityFrameworkNpgsql()
+                    .AddDbContext<MailNotificationContext>(
+                    option => {
+                        option.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                        option.UseNpgsql(hostContext.Configuration.GetSection("ConnectionStrings:MailNotificationDB").Value);
+                    });
+
+            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IService, Service>();
+            
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<RegisterConsumer>();
+                x.AddConsumer<ForgetPasswordConsumer>();
 
                 x.UsingRabbitMq((busRegisterContext, cfg) =>
                 {
@@ -52,6 +72,7 @@ namespace MailNotification
                     });
 
                     cfg.CustomReceiveEndPoint<CrossCutting.Events.User.Register, RegisterConsumer>(settings.RegisterReceiverEndpoint, busRegisterContext);
+                    cfg.CustomReceiveEndPoint<CrossCutting.Events.User.ForgetPassword, ForgetPasswordConsumer>(settings.ForgetPasswordReceiverEndpoint, busRegisterContext);
                 });
             });
             services.AddMassTransitHostedService();

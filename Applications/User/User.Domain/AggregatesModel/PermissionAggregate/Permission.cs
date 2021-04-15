@@ -22,7 +22,6 @@ namespace User.Domain.AggregatesModel.PermissionAggregate
             Name = name;
             Description = description;
             Code = code;
-            CreatedTime = DateTime.UtcNow;
         }
 
         public void SetDefinition(string name, string description, string code)

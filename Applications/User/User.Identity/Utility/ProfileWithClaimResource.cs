@@ -1,5 +1,6 @@
 using CrossCutting.Authentication;
 using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 
 namespace User.Identity.Utility{

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace MailNotification.Infrastructure.Repositories
 {
@@ -17,7 +18,7 @@ namespace MailNotification.Infrastructure.Repositories
 
         public void CreateSentMail(SentMail sentMail)
         {
-            _mailNotificationContext.SentMails.Add(sentMail);
+            _mailNotificationContext.Entry(sentMail).State = EntityState.Added;
             _mailNotificationContext.SaveEntities();
         }
 

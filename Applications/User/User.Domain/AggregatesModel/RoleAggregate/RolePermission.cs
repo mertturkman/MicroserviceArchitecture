@@ -19,14 +19,12 @@ namespace User.Domain.AggregatesModel.RoleAggregate
         {
             RoleId = roleId;
             PermissionId = permissionId;
-            CreatedTime = DateTime.UtcNow;
         }
 
         public RolePermission(Permission permission, Role role)
         {
             Permission = permission;
             Role = role;
-            CreatedTime = DateTime.UtcNow;
         }
         
         public void Delete()

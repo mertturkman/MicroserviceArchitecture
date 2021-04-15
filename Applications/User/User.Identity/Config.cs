@@ -15,7 +15,7 @@ namespace User.Identity
             return new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
-                new ProfileWithClaimResource(),
+                new ProfileWithClaimResource()
             };
         }
 
@@ -35,15 +35,18 @@ namespace User.Identity
                 {
                     ClientId = "user_client",
                     ClientSecrets = { new Secret("abcdef".Sha256()) },
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     AccessTokenType = AccessTokenType.Jwt,
+                    RefreshTokenUsage = TokenUsage.ReUse,
+                    AllowOfflineAccess = true,
                     AllowedScopes = {                         
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
-                        IdentityServerConstants.StandardScopes.Address, 
-                        "user_api" 
-                    },
+                        IdentityServerConstants.StandardScopes.Address,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "user_api"
+                    }
                 }
             };
         }
